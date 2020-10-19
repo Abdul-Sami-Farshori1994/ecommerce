@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import product
+from .models import product,Contact
 from math import ceil
 from django.http import HttpResponse
 
@@ -27,12 +27,22 @@ def index(request):
 def about(request):
     return render(request, 'shop/about.html')
 def contact(request):
-    return HttpResponse("we are at contact")
+    if request.method=="POST":
+        print(request)
+        name = request.POST.get('name','')
+        email = request.POST.get('email', '')
+        phone = request.POST.get('desc', '')
+        desc = request.POST.get('desc', '')
+        print(name,email,phone,desc)
+        contact = Contact(name=name,email=email,phone=phone,desc=desc)
+        contact.save()
+    return render(request, 'shop/contact.html')
 def tracker(request):
-    return HttpResponse("we are at tracker")
+    return render(request, 'shop/tracker.html')
 def search(request):
-    return HttpResponse("we are at search")
-def productview(request):
-    return HttpResponse("we are at productview")
+    return render(request, 'shop/search.html')
+def productview(request, myid):
+    Product = product.objects.filter(id=myid)
+    return render(request, 'shop/productview.html', {'product':Product[0]})
 def checkout(request):
-    return HttpResponse("we are at checkout")
+    return render(request, 'shop/checkout.html')
